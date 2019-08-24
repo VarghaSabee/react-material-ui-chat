@@ -1,5 +1,9 @@
 ## Chat example using [React](https://reactjs.org/) and [Material-UI](https://material-ui.com/): A popular React UI framework
 
+<p align="center">
+  <img src="https://i.ibb.co/xhQcRGJ/chat.gif">
+</p>
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
