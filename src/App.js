@@ -1,18 +1,17 @@
 import React from 'react';
-import Drawer from '@material-ui/core/Drawer';
-import ChatIcon from '@material-ui/icons/Chat';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import { Grid } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
-import Zoom from '@material-ui/core/Zoom';
-import Fab from '@material-ui/core/Fab';
-import Badge from '@material-ui/core/Badge';
-import Grid from '@material-ui/core/Grid';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import ChatList from './Components/Chat/Chat';
-import { withStyles } from '@material-ui/styles';
+// AppBar height 48px
+const heigthWithoutAppBar = window.innerHeight - 48
 
-
-
-const useStyles = theme => ({
+const styles = theme => ({
   paper: {
     // background: "rgb(63,17,64)",
   },
@@ -33,81 +32,85 @@ const useStyles = theme => ({
 
   inline: {
     display: 'inline',
+  },
+  root: {
+    flexGrow: 1,
+  },
+  title: {
+    flexGrow: 1,
+  },
+  roodGrid: {
+    height: `${heigthWithoutAppBar}px`
+  },
+  editorGrid: {
+    height: `${heigthWithoutAppBar * 0.75}px`,
+    borderBottom: '4px solid #888'
+  },
+  consoleGrid: {
+    height: `${heigthWithoutAppBar * 0.25}px`,
+  },
+  projectSelector: {
+    position: 'absolute',
+    zIndex: 1,
+    left: '50%',
+    transform: 'translate(-50%, 0)',
+    top: 12,
   }
 });
 
-const theme_dark = createMuiTheme({
-  palette: {
-    type: 'dark', // Switching the dark mode on is a single property value change.
-  },
-});
+
+
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      right: false,
-      allUnreaded: 200
-    }
-  }
-
-
-  toggleDrawer = (open) => event => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-
-    this.setState({ 'right': open });
-  };
 
   render() {
     const { classes } = this.props;
-    const { allUnreaded } = this.state;
 
     return (
-      <MuiThemeProvider theme={theme_dark}>
-        <>
-          <Drawer
-            anchor="right"
-            className="chatGrid"
-            classes={{ paper: classes.paper }}
-            open={this.state.right}
-            onClose={this.toggleDrawer(false)}
-            variant='persistent'
-          >
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Toolbar variant="dense">
+            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              News
+          </Typography>
+
+            <div className={classes.projectSelector}>
+              <span>Project: Hello World XML</span>
+            </div>
+
+            <Button color="inherit">Login</Button>
+          </Toolbar>
+        </AppBar>
+
+
+        <Grid celled="true" padded="true" className={classes.roodGrid}>
+          <Grid item xs container direction="row" className={classes.roodGrid} >
             <Grid
+              item xs={3}
               container
               direction="column"
-              justify="flex-end"
-              alignItems="center"
-              spacing={0}
+              className={classes.roodGrid}
+              style={{ borderRight: '4px solid #888' }}
             >
-              <ChatList
-                ref={instance => { this.child = instance; }}
-                handleToggleDrawer={this.toggleDrawer}
-              />
+              Hello File Three Grid
             </Grid>
-          </Drawer>
-          {/* Fab chat */}
-          <Zoom
-            unmountOnExit
-            in={!this.state.right}
-            className={classes.fab}
-          >
-            <Badge color="primary" badgeContent={allUnreaded} invisible={!Boolean(allUnreaded)} >
-              <Fab
-                aria-label="Open chat"
+            <Grid item xs={9} container direction="column" className={classes.roodGrid} >
+              <Grid item container direction="row" className={classes.editorGrid} >
+                Hello Editor Grid
+              </Grid>
 
-                onClick={this.toggleDrawer(true)}
-              >
-                <ChatIcon />
-              </Fab>
-            </Badge>
-          </Zoom>
-        </>
-      </MuiThemeProvider>
+              <Grid item container direction="row" className={classes.consoleGrid} >
+                Hello Console Grid
+              </Grid>
+
+            </Grid>
+          </Grid>
+        </Grid>
+      </div>
     );
   }
 }
-export default withStyles(useStyles)(App);
+export default withStyles(styles)(App);

@@ -1,0 +1,29 @@
+// get /journeys/123
+// {
+//    "journey_id":123,
+//    "name":"hello world",
+//    "tags":["beginner", "apk", "user quide"],
+//    "steps":[
+//         {
+//             "step_id":1234
+//             "text":"click this icon to start build process",
+//             "step_type":"ui",
+//             "html_tag":"green_run_123",
+//             "expected_action":"click"
+//        },
+//        {
+//               "step_id":1235
+//             "text":"change 'hello world' to 'hello John'",
+//             "step_type":"code",
+//             "code_line_url":"project/{current_project}/line/123",
+//             "expected_action":"textview.text = "Hello John!""
+//         },
+//         {
+//              "step_id":1235
+//             "text":"scan qr code with android qr-code scanner'",
+//             "step_type":"popup",
+//             "image_url":"images/1234.png",
+//             "expected action":"next"
+//         }
+//     ]
+// }

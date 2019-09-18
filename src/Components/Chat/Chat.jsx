@@ -8,6 +8,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import SockJS from 'sockjs-client'
+import Stomp from 'stomp-websocket'
+
 import { IconButton, Divider } from '@material-ui/core';
 import { ListItemAvatar, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 
@@ -28,11 +31,15 @@ const useStyles = theme => ({
     }
 });
 
+var stompClient = Stomp.over( new SockJS('http://devapi.kotlab.io/ws'))
+
 class ChatList extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            connected: false,
+
             user: {
                 name: "User User",
             },
@@ -66,12 +73,39 @@ class ChatList extends React.Component {
         this.sendMessage = this.sendMessage.bind(this)
         this.loadMessages = this.loadMessages.bind(this)
         this.handleChatRoomChange = this.handleChatRoomChange.bind(this)
+
+
+        stompClient.connect({ uuid: 'uuid2' }, (frame) => {
+            console.log('Connected: ' + frame);
+            var userName = frame.headers['user-name'];
+            console.log(userName);
+
+            stompClient.subscribe('/app/chat.project.1', (content) => {
+                console.log(content);
+            });
+
+            stompClient.debug = (ok) =>{
+                console.log(ok)
+            }
+
+        });
+
     }
 
+    /*********************************** */
     componentDidMount() {
         this.loadMessages()
+
+
+
     }
 
+    componentWillUnmount() {
+        if (this.stompClient !== null) {
+            this.stompClient.disconnect();
+        }
+    }
+    /**************************************** */
     handleChatRoomChange = (roomId, type) => {
 
         /**
@@ -140,7 +174,9 @@ class ChatList extends React.Component {
                 this.child.scrollToBottom()
                 return
             }
-            this.child.messagesEnd.scrollTop = 10
+            if (this.child) {
+                this.child.messagesEnd.scrollTop = 10
+            }
 
         }, 1000)
 
@@ -157,6 +193,11 @@ class ChatList extends React.Component {
             }]
         })
 
+
+        /*************************************** */
+        stompClient.send('/user/topic/chat.project.1', {}, JSON.stringify({ 'message': message }));
+        /*************************************** */
+
         this.child.scrollToBottom()
     }
 
@@ -172,7 +213,9 @@ class ChatList extends React.Component {
                 <List className="listReStyle">
                     <ListItem alignItems="flex-start">
                         <ListItemAvatar>
-                            <Avatar alt="Remy Sharp">
+                            <Avatar alt="Remy Sharp"
+                                ref={instance => { this.avatarRef = instance; }}
+                            >
                                 U
                             </Avatar>
                         </ListItemAvatar>

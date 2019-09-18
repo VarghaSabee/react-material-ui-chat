@@ -65,7 +65,10 @@ class ProjectRooms extends React.Component {
 
     scrollToBottom = () => {
         setTimeout(() => {
-            this.messagesEnd.scrollTop = this.messagesEnd.scrollHeight;
+            if (this.messagesEnd) {
+                this.messagesEnd.scrollTop = this.messagesEnd.scrollHeight;
+            }
+
         }, 200)
     }
 
